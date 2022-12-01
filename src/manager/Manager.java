@@ -2,6 +2,7 @@ package manager;
 
 import tasks.Task;
 import tasks.Epic;
+import tasks.Subtask;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -9,7 +10,7 @@ import java.util.TreeMap;
 public class Manager {
     private final TreeMap<Integer, Task> treeMapTask = new TreeMap<>();
     private final TreeMap<Integer, Epic> treeMapEpic = new TreeMap<>();
-    private final TreeMap<Integer, Epic.Subtask> treeMapSubtask = new TreeMap<>();
+    private final TreeMap<Integer, Subtask> treeMapSubtask = new TreeMap<>();
     private int id = 0;
 
 
@@ -25,14 +26,14 @@ public class Manager {
         treeMapEpic.put(id, epic);
     }
 
-    public void saveInTreeMapSubtask(Epic.Subtask subtask) {
+    public void saveInTreeMapSubtask(Subtask subtask) {
         id += 1;
         subtask.setId(id);
         treeMapSubtask.put(id, subtask);
     }
 
 
-    public void addSubtaskInEpic(Epic.Subtask subtask, Epic epic) {
+    public void addSubtaskInEpic(Subtask subtask, Epic epic) {
         if (epic.getArrayListSubtaskId().contains(subtask.getId())) {
             epic.getArrayListSubtaskId().remove(subtask.getId());
         }
@@ -49,7 +50,7 @@ public class Manager {
         return new ArrayList<>(treeMapEpic.values());
     }
 
-    public ArrayList<Epic.Subtask> getTreeMapSubtask() {
+    public ArrayList<Subtask> getTreeMapSubtask() {
         return new ArrayList<>(treeMapSubtask.values());
     }
 
@@ -75,7 +76,7 @@ public class Manager {
         return treeMapEpic.get(id);
     }
 
-    public Epic.Subtask getSubtaskById(int id) {
+    public Subtask getSubtaskById(int id) {
         return treeMapSubtask.get(id);
     }
 
@@ -88,8 +89,8 @@ public class Manager {
         return new Epic(epic.getName(), epic.getDescription(), epic.getArrayListSubtaskId(), epic.getStatus());
     }
 
-    public Epic.Subtask createSubtask(Epic.Subtask subtask) {
-        return new Epic.Subtask(subtask.getEpicId(), subtask.getName(), subtask.getDescription(), subtask.getStatus());
+    public Subtask createSubtask(Subtask subtask) {
+        return new Subtask(subtask.getEpicId(), subtask.getName(), subtask.getDescription(), subtask.getStatus());
     }
 
 
@@ -106,8 +107,8 @@ public class Manager {
         treeMapEpic.put(epic.getId(), newEpic);
     }
 
-    public void subtaskUpdate(Epic.Subtask subtask) {
-        Epic.Subtask newSubtask = new Epic.Subtask(subtask.getId(), subtask.getEpicId(), subtask.getName()
+    public void subtaskUpdate(Subtask subtask) {
+        Subtask newSubtask = new Subtask(subtask.getId(), subtask.getEpicId(), subtask.getName()
                 , subtask.getDescription(), subtask.getStatus());
         treeMapSubtask.put(subtask.getId(), newSubtask);
 
@@ -132,8 +133,8 @@ public class Manager {
     }
 
 
-    public ArrayList<Epic.Subtask> getArrayListSubtaskByEpicId(int id) {
-        ArrayList<Epic.Subtask> arrayListSubtaskByEpicId = new ArrayList<>();
+    public ArrayList<Subtask> getArrayListSubtaskByEpicId(int id) {
+        ArrayList<Subtask> arrayListSubtaskByEpicId = new ArrayList<>();
         for (int subtaskId : treeMapSubtask.keySet()) {
             if (id == getSubtaskById(subtaskId).getEpicId()) {
                 arrayListSubtaskByEpicId.add(getSubtaskById(subtaskId));
@@ -149,20 +150,20 @@ public class Manager {
         int statusDone = 0;
 
         for (Integer id : arrayListSubtaskId) {
-            if (treeMapSubtask.get(id).getStatus().equals(Task.Status.New)) {
+            if (treeMapSubtask.get(id).getStatus().equals(Task.Status.NEW)) {
                 statusNew++;
             }
-            if (treeMapSubtask.get(id).getStatus().equals(Task.Status.Done)) {
+            if (treeMapSubtask.get(id).getStatus().equals(Task.Status.DONE)) {
                 statusDone++;
             }
         }
 
         if ((arrayListSubtaskId.isEmpty()) || (statusNew == arrayListSubtaskId.size())) {
-            epicStatus = Task.Status.New;
+            epicStatus = Task.Status.NEW;
         } else if (statusDone == arrayListSubtaskId.size()) {
-            epicStatus = Task.Status.Done;
+            epicStatus = Task.Status.DONE;
         } else {
-            epicStatus = Task.Status.InProgress;
+            epicStatus = Task.Status.IN_PROGRESS;
         }
         return epicStatus;
     }

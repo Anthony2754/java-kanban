@@ -58,6 +58,7 @@ public class Task {
 
     @Override
     public int hashCode() {
+
         return Objects.hash(id, name, description, status);
     }
 
@@ -72,8 +73,8 @@ public class Task {
 
 
     public enum Status {
-        New,
-        Done,
-        InProgress
+        NEW,
+        DONE,
+        IN_PROGRESS
     }
 }
