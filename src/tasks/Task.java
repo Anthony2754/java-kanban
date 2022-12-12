@@ -2,7 +2,6 @@ package tasks;
 
 import java.util.Objects;
 
-
 public class Task {
     private final String name;
     private final String description;
@@ -43,6 +42,11 @@ public class Task {
         return status;
     }
 
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -50,11 +54,6 @@ public class Task {
         Task task = (Task) obj;
         return id == task.id && name.equals(task.name) && description.equals(task.description) && status == task.status;
     }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
 
     @Override
     public int hashCode() {
@@ -69,12 +68,5 @@ public class Task {
                 ", taskName= " + name +
                 ", description= " + description +
                 ", status= " + status + "}";
-    }
-
-
-    public enum Status {
-        NEW,
-        DONE,
-        IN_PROGRESS
     }
 }

@@ -3,15 +3,15 @@ package main;
 import managers.*;
 import tasks.*;
 import java.util.ArrayList;
-import static tasks.Task.Status.NEW;
-import static tasks.Task.Status.DONE;
+import static tasks.Status.NEW;
+import static tasks.Status.DONE;
 
 public class Main {
     public static void main(String[] args) {
 
         TaskManager manager = Managers.getDefault();
-
-        Task firstTask = new Task("Прогулятся", "Прогулятся по парку", DONE);
+        //Я даже и не знал что есть русский словарь для IDEA:)
+        Task firstTask = new Task("Прогуляться", "Прогуляться по парку", DONE);
         manager.saveInTreeMapTask(firstTask);
 
         Task secondTask = new Task("Пообедать", "Первое, второе и компот", NEW);
@@ -19,7 +19,7 @@ public class Main {
 
 
         ArrayList<Integer> arrayListSubtaskIdFirstEpic = new ArrayList<>();
-        Task.Status statusFirstEpic = manager.getEpicStatus(arrayListSubtaskIdFirstEpic);
+        Status statusFirstEpic = manager.getEpicStatus(arrayListSubtaskIdFirstEpic);
         Epic firstEpic = new Epic("Сходить в магазин", "Купить овощи и фрукты",
                 arrayListSubtaskIdFirstEpic, statusFirstEpic);
         manager.saveInTreeMapEpic(firstEpic);
@@ -38,7 +38,7 @@ public class Main {
 
 
         ArrayList<Integer> arrayListSubtaskIdSecondEpic = new ArrayList<>();
-        Task.Status statusSecondEpic = manager.getEpicStatus(arrayListSubtaskIdSecondEpic);
+        Status statusSecondEpic = manager.getEpicStatus(arrayListSubtaskIdSecondEpic);
         Epic secondEpic = new Epic("Обслужить автомобиль", "Провести ТО двигателя",
                 arrayListSubtaskIdSecondEpic, statusSecondEpic);
         manager.saveInTreeMapEpic(secondEpic);

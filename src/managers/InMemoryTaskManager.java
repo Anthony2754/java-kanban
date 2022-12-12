@@ -3,13 +3,14 @@ package managers;
 import tasks.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 
 public class InMemoryTaskManager implements TaskManager {
-    private final TreeMap<Integer, Task> treeMapTask = new TreeMap<>();
-    private final TreeMap<Integer, Epic> treeMapEpic = new TreeMap<>();
-    private final TreeMap<Integer, Subtask> treeMapSubtask = new TreeMap<>();
+    private final Map<Integer, Task> treeMapTask = new TreeMap<>();
+    private final Map<Integer, Epic> treeMapEpic = new TreeMap<>();
+    private final Map<Integer, Subtask> treeMapSubtask = new TreeMap<>();
     private int id = 0;
     private final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
@@ -128,7 +129,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void epicUpdate(Epic epic) {
-        Task.Status epicStatus = getEpicStatus(epic.getArrayListSubtaskId());
+        Status epicStatus = getEpicStatus(epic.getArrayListSubtaskId());
         Epic newEpic = new Epic(epic.getId(), epic.getName(), epic.getDescription(),
                 epic.getArrayListSubtaskId(), epicStatus);
         epic.setStatus(epicStatus);
@@ -141,7 +142,7 @@ public class InMemoryTaskManager implements TaskManager {
                 , subtask.getDescription(), subtask.getStatus());
         treeMapSubtask.put(subtask.getId(), newSubtask);
 
-        Task.Status newStatus = getEpicStatus(treeMapEpic.get(subtask.getEpicId()).getArrayListSubtaskId());
+        Status newStatus = getEpicStatus(treeMapEpic.get(subtask.getEpicId()).getArrayListSubtaskId());
         treeMapEpic.get(subtask.getEpicId()).setStatus(newStatus);
     }
 
@@ -179,32 +180,32 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public Task.Status getEpicStatus(ArrayList<Integer> arrayListSubtaskId) {
-        Task.Status epicStatus;
+    public Status getEpicStatus(ArrayList<Integer> arrayListSubtaskId) {
+        Status epicStatus;
         int statusNew = 0;
         int statusDone = 0;
 
         for (Integer id : arrayListSubtaskId) {
-            if (treeMapSubtask.get(id).getStatus().equals(Task.Status.NEW)) {
+            if (treeMapSubtask.get(id).getStatus().equals(Status.NEW)) {
                 statusNew++;
             }
-            if (treeMapSubtask.get(id).getStatus().equals(Task.Status.DONE)) {
+            if (treeMapSubtask.get(id).getStatus().equals(Status.DONE)) {
                 statusDone++;
             }
         }
 
         if ((arrayListSubtaskId.isEmpty()) || (statusNew == arrayListSubtaskId.size())) {
-            epicStatus = Task.Status.NEW;
+            epicStatus = Status.NEW;
         } else if (statusDone == arrayListSubtaskId.size()) {
-            epicStatus = Task.Status.DONE;
+            epicStatus = Status.DONE;
         } else {
-            epicStatus = Task.Status.IN_PROGRESS;
+            epicStatus = Status.IN_PROGRESS;
         }
         return epicStatus;
     }
 
     @Override
-      public List<Task> getHistory() {
+    public List<Task> getHistory() {
         return inMemoryHistoryManager.getHistory();
     }
 }

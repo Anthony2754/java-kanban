@@ -59,7 +59,7 @@ public interface TaskManager {
     ArrayList<Subtask> getArrayListSubtaskByEpicId(int id);
 
 
-    Task.Status getEpicStatus(ArrayList<Integer> arrayListSubtaskId);
+    Status getEpicStatus(ArrayList<Integer> arrayListSubtaskId);
 
 
     List<Task> getHistory();
