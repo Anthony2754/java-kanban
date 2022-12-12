@@ -1,9 +1,7 @@
 package main;
 
-import manager.Manager;
-import tasks.Task;
-import tasks.Epic;
-import tasks.Subtask;
+import managers.*;
+import tasks.*;
 import java.util.ArrayList;
 import static tasks.Task.Status.NEW;
 import static tasks.Task.Status.DONE;
@@ -11,7 +9,7 @@ import static tasks.Task.Status.DONE;
 public class Main {
     public static void main(String[] args) {
 
-        Manager manager = new Manager();
+        TaskManager manager = Managers.getDefault();
 
         Task firstTask = new Task("Прогулятся", "Прогулятся по парку", DONE);
         manager.saveInTreeMapTask(firstTask);
@@ -114,12 +112,73 @@ public class Main {
         System.out.println();
         System.out.println("2.3 Получение по идентификатору:");
         System.out.println(manager.getTaskById(8));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
         System.out.println(manager.getTaskById(9));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
         System.out.println(manager.getEpicById(10));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
         System.out.println(manager.getSubtaskById(11));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
         System.out.println(manager.getSubtaskById(12));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
         System.out.println(manager.getEpicById(13));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
         System.out.println(manager.getSubtaskById(14));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
+        System.out.println(manager.getTaskById(8));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
+        System.out.println(manager.getTaskById(9));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
+        System.out.println(manager.getEpicById(10));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
+        System.out.println(manager.getSubtaskById(11));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
+        System.out.println(manager.getSubtaskById(12));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
+        System.out.println(manager.getEpicById(13));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+        System.out.println();
+
+        System.out.println(manager.getSubtaskById(14));
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
 
 
         System.out.println();
