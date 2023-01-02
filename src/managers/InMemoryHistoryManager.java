@@ -2,23 +2,77 @@ package managers;
 
 import tasks.Task;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
+public class InMemoryHistoryManager implements HistoryManager<Task> {
 
-public class InMemoryHistoryManager implements HistoryManager {
-    private final List<Task> listOfLastTasks = new LinkedList<>();
+    private static Node first;
+    private static Node last;
+    private final Map<Integer, Node> hashMapHistory = new HashMap<>();
+    private static final InMemoryHistoryManager CustomLinkedList = new InMemoryHistoryManager();
 
     @Override
     public void add(Task task) {
-        if (listOfLastTasks.size() == 10) {
-            listOfLastTasks.remove(0);
+
+        int taskId = task.getId();
+        boolean haveNode = hashMapHistory.containsKey(taskId);
+        if (haveNode) {
+            remove(taskId);
         }
-        listOfLastTasks.add(task);
+        CustomLinkedList.linkLast(task);
+        hashMapHistory.put(taskId, last);
+    }
+
+    private void linkLast(Task task) {
+        final Node lastTask = last;
+        final Node newNode = new Node(lastTask, task, null);
+        last = newNode;
+        if (lastTask == null)
+            first = newNode;
+        else
+            lastTask.next = newNode;
+    }
+
+    private List<Task> getTasks() {
+        List<Task> arrayListOfLastTasks = new ArrayList<>();
+        int i = 0;
+        for (Node node = first; node != null; node = node.next)
+            arrayListOfLastTasks.add(i++, node.task);
+        return arrayListOfLastTasks;
+    }
+
+    private void removeNode(Node node) {
+        final Node next = node.next;
+        final Node prev = node.prev;
+
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+        node.task = null;
+    }
+
+    @Override
+    public void remove(int id){
+        Node node = hashMapHistory.get(id);
+        if (node != null) {
+            removeNode(node);
+            hashMapHistory.remove(id);
+        }
     }
 
     @Override
     public List<Task> getHistory() {
-        return listOfLastTasks;
+        return getTasks();
     }
+
 }

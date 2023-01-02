@@ -150,6 +150,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(int id) {
         treeMapTask.remove(id);
+        inMemoryHistoryManager.remove(id);
     }
 
     @Override
@@ -158,12 +159,14 @@ public class InMemoryTaskManager implements TaskManager {
             deleteSubtaskById(subtaskId);
         }
         treeMapEpic.remove(id);
+        inMemoryHistoryManager.remove(id);
     }
 
 
     @Override
     public void deleteSubtaskById(int id) {
         treeMapSubtask.remove(id);
+        inMemoryHistoryManager.remove(id);
     }
 
 

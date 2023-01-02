@@ -10,17 +10,10 @@ public class Main {
     public static void main(String[] args) {
 
         TaskManager manager = Managers.getDefault();
-        //Я даже и не знал что есть русский словарь для IDEA:)
-        Task firstTask = new Task("Прогуляться", "Прогуляться по парку", DONE);
-        manager.saveInTreeMapTask(firstTask);
-
-        Task secondTask = new Task("Пообедать", "Первое, второе и компот", NEW);
-        manager.saveInTreeMapTask(secondTask);
-
 
         ArrayList<Integer> arrayListSubtaskIdFirstEpic = new ArrayList<>();
         Status statusFirstEpic = manager.getEpicStatus(arrayListSubtaskIdFirstEpic);
-        Epic firstEpic = new Epic("Сходить в магазин", "Купить овощи и фрукты",
+        Epic firstEpic = new Epic("Сходить в магазин", "Купить овощи, фрукты и мясо",
                 arrayListSubtaskIdFirstEpic, statusFirstEpic);
         manager.saveInTreeMapEpic(firstEpic);
 
@@ -32,8 +25,13 @@ public class Main {
                 "Яблоки, бананы, мандарины, киви", NEW);
         manager.saveInTreeMapSubtask(secondSubtaskInFirstEpic);
 
+        Subtask thirdSubtaskInFirstEpic = new Subtask(firstEpic.getId(), "Купить мясо",
+                "Говядина, свинина", NEW);
+        manager.saveInTreeMapSubtask(thirdSubtaskInFirstEpic);
+
         manager.addSubtaskInEpic(firstSubtaskInFirstEpic, firstEpic);
         manager.addSubtaskInEpic(secondSubtaskInFirstEpic, firstEpic);
+        manager.addSubtaskInEpic(thirdSubtaskInFirstEpic, firstEpic);
         manager.epicUpdate(firstEpic);
 
 
@@ -43,11 +41,6 @@ public class Main {
                 arrayListSubtaskIdSecondEpic, statusSecondEpic);
         manager.saveInTreeMapEpic(secondEpic);
 
-        Subtask firstSubtaskInSecondEpic = new Subtask(secondEpic.getId(), "Замена расходников",
-                "Заменить: масло и фильтры", NEW);
-        manager.saveInTreeMapSubtask(firstSubtaskInSecondEpic);
-
-        manager.addSubtaskInEpic(firstSubtaskInSecondEpic, secondEpic);
         manager.epicUpdate(secondEpic);
 
 
@@ -58,160 +51,82 @@ public class Main {
 
 
         System.out.println();
-        System.out.println("2.2 Удаление всех задач:");
-        manager.deletingAllTasks();
-        manager.deletingAllEpics();
-
-        System.out.println(manager.getTreeMapTask());
-        System.out.println(manager.getTreeMapEpic());
-        System.out.println(manager.getTreeMapSubtask());
-
-
-        System.out.println();
-        System.out.println("2.4 Создание. Сам объект должен передаваться в качестве параметра:");
-
-        Task createNewFirstTask = manager.createTask(firstTask);
-        manager.saveInTreeMapTask(createNewFirstTask);
-
-        Task createNewSecondTask = manager.createTask(secondTask);
-        manager.saveInTreeMapTask(createNewSecondTask);
-
-        System.out.println(createNewFirstTask);
-        System.out.println(createNewSecondTask);
-
-
-        Epic createNewFirstEpic = manager.createEpic(firstEpic);
-        manager.saveInTreeMapEpic(createNewFirstEpic);
-
-        Subtask createNewFirstSubtaskInFirstEpic = manager.createSubtask(firstSubtaskInFirstEpic);
-        manager.saveInTreeMapSubtask(createNewFirstSubtaskInFirstEpic);
-        manager.addSubtaskInEpic(createNewFirstSubtaskInFirstEpic, createNewFirstEpic);
-
-        Subtask createNewSecondSubtaskInFirstEpic = manager.createSubtask(secondSubtaskInFirstEpic);
-        manager.saveInTreeMapSubtask(createNewSecondSubtaskInFirstEpic);
-        manager.addSubtaskInEpic(createNewSecondSubtaskInFirstEpic, createNewFirstEpic);
-        manager.epicUpdate(createNewFirstEpic);
-
-        System.out.println(createNewFirstEpic);
-        System.out.println(createNewFirstSubtaskInFirstEpic);
-        System.out.println(createNewSecondSubtaskInFirstEpic);
-
-
-        Epic createNewSecondEpic = manager.createEpic(secondEpic);
-        manager.saveInTreeMapEpic(createNewSecondEpic);
-
-        Subtask createNewFirstSubtaskInSecondEpic = manager.createSubtask(firstSubtaskInSecondEpic);
-        manager.saveInTreeMapSubtask(createNewFirstSubtaskInSecondEpic);
-        manager.addSubtaskInEpic(createNewFirstSubtaskInSecondEpic, createNewSecondEpic);
-        manager.epicUpdate(createNewSecondEpic);
-
-        System.out.println(createNewSecondEpic);
-        System.out.println(createNewFirstSubtaskInSecondEpic);
-
-
-        System.out.println();
         System.out.println("2.3 Получение по идентификатору:");
-        System.out.println(manager.getTaskById(8));
+
+        System.out.println(manager.getEpicById(1));
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
         System.out.println();
 
-        System.out.println(manager.getTaskById(9));
+        System.out.println(manager.getSubtaskById(2));
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
         System.out.println();
 
-        System.out.println(manager.getEpicById(10));
+        System.out.println(manager.getSubtaskById(3));
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
         System.out.println();
 
-        System.out.println(manager.getSubtaskById(11));
+        System.out.println(manager.getSubtaskById(4));
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
         System.out.println();
 
-        System.out.println(manager.getSubtaskById(12));
+        System.out.println(manager.getEpicById(1));
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
         System.out.println();
 
-        System.out.println(manager.getEpicById(13));
+        System.out.println(manager.getSubtaskById(2));
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
         System.out.println();
 
-        System.out.println(manager.getSubtaskById(14));
+        System.out.println(manager.getEpicById(5));
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
         System.out.println();
 
-        System.out.println(manager.getTaskById(8));
+        System.out.println(manager.getSubtaskById(2));
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
         System.out.println();
 
-        System.out.println(manager.getTaskById(9));
+        System.out.println(manager.getSubtaskById(4));
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
         System.out.println();
 
-        System.out.println(manager.getEpicById(10));
+        System.out.println(manager.getEpicById(5));
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
         System.out.println();
 
-        System.out.println(manager.getSubtaskById(11));
+        System.out.println(manager.getSubtaskById(4));
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
         System.out.println();
 
-        System.out.println(manager.getSubtaskById(12));
+        System.out.println(manager.getEpicById(5));
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
         System.out.println();
-
-        System.out.println(manager.getEpicById(13));
-        System.out.println("История просмотров:");
-        System.out.println(manager.getHistory());
-        System.out.println();
-
-        System.out.println(manager.getSubtaskById(14));
-        System.out.println("История просмотров:");
-        System.out.println(manager.getHistory());
-
-
-        System.out.println();
-        System.out.println("2.5 Обновление. Новая версия объекта с верным идентификатором передаются в виде "
-                + "параметра:");
-
-        createNewSecondTask.setStatus(DONE);
-        manager.taskUpdate(createNewSecondTask);
-
-        createNewSecondSubtaskInFirstEpic.setStatus(DONE);
-        manager.subtaskUpdate(createNewSecondSubtaskInFirstEpic);
-        manager.epicUpdate(createNewFirstEpic);
-
-        System.out.println(manager.getTreeMapTask());
-        System.out.println(manager.getTreeMapEpic());
-        System.out.println(manager.getTreeMapSubtask());
-
-
-        System.out.println();
-        System.out.println("3.1 Получение списка всех подзадач определённого эпика:");
-        System.out.println(manager.getArrayListSubtaskByEpicId(10));
-        System.out.println(manager.getArrayListSubtaskByEpicId(13));
 
 
         System.out.println();
         System.out.println("2.6 Удаление по идентификатору:");
 
-        manager.deleteTaskById(8);
-        manager.deleteEpicById(13);
-        manager.deleteSubtaskById(14);
+        //manager.deleteEpicById(1);
+        manager.deleteEpicById(5);
+        manager.deleteSubtaskById(3);
 
-        System.out.println(manager.getTreeMapTask());
         System.out.println(manager.getTreeMapEpic());
         System.out.println(manager.getTreeMapSubtask());
+
+        System.out.println();
+        System.out.println("История просмотров:");
+        System.out.println(manager.getHistory());
+
     }
 }
