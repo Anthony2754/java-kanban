@@ -1,6 +1,5 @@
-package main;
+package managers;
 
-import managers.*;
 import tasks.*;
 import java.util.ArrayList;
 import static tasks.Status.NEW;
