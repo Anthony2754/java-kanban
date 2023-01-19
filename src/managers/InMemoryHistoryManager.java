@@ -23,7 +23,7 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
         hashMapHistory.put(taskId, last);
     }
 
-    private void linkLast(Task task) {
+    public void linkLast(Task task) {
         final Node lastTask = last;
         final Node newNode = new Node(lastTask, task, null);
         last = newNode;

@@ -1,6 +1,7 @@
 package tasks;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -26,8 +27,6 @@ public class Epic extends Task {
     }
 
     @Override
-    // Если я все правильно понял, то сначала идут обычные методы, а потом уже @Override, но оно тут так и есть
-    // Но в классе Task был 1 метод не на месте
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
