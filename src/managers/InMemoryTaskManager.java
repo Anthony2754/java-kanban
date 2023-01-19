@@ -12,13 +12,18 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Epic> treeMapEpic = new TreeMap<>();
     private final Map<Integer, Subtask> treeMapSubtask = new TreeMap<>();
     private int id = 0;
-    private final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+    protected final HistoryManager<Task> inMemoryHistoryManager = Managers.getDefaultHistory();
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @Override
     public void saveInTreeMapTask(Task task) {
         id += 1;
         task.setId(id);
         treeMapTask.put(id, task);
+        setId(id);
     }
 
     @Override
@@ -26,6 +31,7 @@ public class InMemoryTaskManager implements TaskManager {
         id += 1;
         epic.setId(id);
         treeMapEpic.put(id, epic);
+        setId(id);
     }
 
     @Override
@@ -33,6 +39,7 @@ public class InMemoryTaskManager implements TaskManager {
         id += 1;
         subtask.setId(id);
         treeMapSubtask.put(id, subtask);
+        setId(id);
     }
 
 
