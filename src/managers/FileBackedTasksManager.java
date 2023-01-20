@@ -116,18 +116,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             bufferedWriter.write(formatString);
 
             for (Task task : getTreeMapTask()) {
-                bufferedWriter.write(taskToString(task) + "\n");
+                bufferedWriter.write(taskToString(task) + System.lineSeparator());
             }
 
             for (Epic epic : getTreeMapEpic()) {
-                bufferedWriter.write(epicToString(epic) + "\n");
+                bufferedWriter.write(epicToString(epic) + System.lineSeparator());
             }
 
             for (Subtask subtask : getTreeMapSubtask()) {
-                bufferedWriter.write(subtaskToString(subtask) + "\n");
+                bufferedWriter.write(subtaskToString(subtask) + System.lineSeparator());
             }
 
-            bufferedWriter.write("\n");
+            bufferedWriter.write(System.lineSeparator());
 
             bufferedWriter.write(historyToString(inMemoryHistoryManager));
         } catch (IOException exc) {
@@ -187,8 +187,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             ArrayList<Integer> arrayListSubtaskIdInEpic = new ArrayList<>();
 
             Status epicStatus = Status.valueOf(arrayTasks[3].trim());
-            taskFromString = new Epic(epicTaskId, epicName, epicDescription, arrayListSubtaskIdInEpic
-                    , epicStatus);
+            taskFromString = new Epic(epicTaskId, epicName, epicDescription, arrayListSubtaskIdInEpic, epicStatus);
         }
 
         if (type.equalsIgnoreCase(subtask)) {
@@ -204,12 +203,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     }
 
-   static String historyToString(HistoryManager<Task> manager) {
+    static String historyToString(HistoryManager<Task> manager) {
 
-       List<Integer> arrayListIdFromHistory = new ArrayList<>();
-       List<Task> history = manager.getHistory();
+        List<Integer> arrayListIdFromHistory = new ArrayList<>();
+        List<Task> history = manager.getHistory();
 
-       for (Task task : history) {
+        for (Task task : history) {
             if (!arrayListIdFromHistory.contains(task.getId())) {
                 arrayListIdFromHistory.add(task.getId());
             }
@@ -235,7 +234,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.saveFile = searchFile(file);
     }
 
-     FileBackedTasksManager loadFromFile(File file) throws ManagerSaveException {
+    FileBackedTasksManager loadFromFile(File file) throws ManagerSaveException {
 
         FileBackedTasksManager downloadManager = new FileBackedTasksManager(file);
 

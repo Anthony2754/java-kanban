@@ -1,5 +1,6 @@
 package managers;
 
+import Node.Node;
 import tasks.Task;
 
 import java.util.*;
