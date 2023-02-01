@@ -17,19 +17,6 @@ public class InMemoryTaskManager implements TaskManager {
         this.id = id;
     }
 
-    private final Set<Task> treeSetPrioritizedTasks = new TreeSet<>((task1, task2) -> {
-        if ((task1.getStartTime() != null) && (task2.getStartTime() != null)) {
-            return task1.getStartTime().compareTo(task2.getStartTime());
-        } else if (task1.getStartTime() == null) {
-            return 1;
-        } else if (null == task2.getStartTime()) {
-            return -1;
-        }else {
-            return 0;
-        }
-    });
-
-
     public void checkTimeCrossing(Task task) {
         LocalDateTime startTime = task.getStartTime();
         LocalDateTime endTime = task.getEndTime();
@@ -48,6 +35,18 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
     }
+
+    private final Set<Task> treeSetPrioritizedTasks = new TreeSet<>((task1, task2) -> {
+        if ((task1.getStartTime() != null) && (task2.getStartTime() != null)) {
+            return task1.getStartTime().compareTo(task2.getStartTime());
+        } else if (task1.getStartTime() == null) {
+            return 1;
+        } else if (null == task2.getStartTime()) {
+            return -1;
+        }else {
+            return 0;
+        }
+    });
 
     private Set<Task> getPrioritizedTasks() {
         return treeSetPrioritizedTasks;  // size 2

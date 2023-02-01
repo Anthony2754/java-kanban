@@ -1,4 +1,6 @@
-package Test;
+package test;
+
+// если я правильно понял, я переименовал пакет Test в test и теперь все работает вроде бы :)
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +22,7 @@ import static tasks.Status.DONE;
 import static tasks.Status.NEW;
 
 class HistoryManagerTest extends InMemoryTaskManager {
-    HistoryManager historyManager= new InMemoryHistoryManager();
+    HistoryManager<Task> historyManager = new InMemoryHistoryManager();
     Task task1;
     Task task2;
     Epic epic1;
@@ -80,7 +82,7 @@ class HistoryManagerTest extends InMemoryTaskManager {
     }
 
     @Test
-    void getTasksHistory() {
+    public void getTaskHistory() {
 
         assertNotNull(history, "Пустая история просмотров");
 

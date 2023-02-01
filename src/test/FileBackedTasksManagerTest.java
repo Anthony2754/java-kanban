@@ -1,4 +1,4 @@
-package Test;
+package test;
 
 import managers.FileBackedTasksManager;
 import managers.TaskManager;
