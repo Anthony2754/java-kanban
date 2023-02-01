@@ -2,8 +2,10 @@ package managers;
 
 import tasks.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
     void saveInTreeMapTask(Task task);
@@ -27,9 +29,9 @@ public interface TaskManager {
 
     void deletingAllEpics();
 
+    void deletingAllSubtasks();
 
     Task getTaskById(int id);
-
 
     Epic getEpicById(int id);
 
@@ -58,10 +60,21 @@ public interface TaskManager {
 
     ArrayList<Subtask> getArrayListSubtaskByEpicId(int id);
 
-
     Status getEpicStatus(ArrayList<Integer> arrayListSubtaskId);
 
+    Status getterEpicStatus(ArrayList<Integer> listOfSubTaskId);
 
     List<Task> getHistory();
+
+    void removeFromHistory(int id);
+
+    Set<Task> getterPrioritizedTasks();
+
+    LocalDateTime getterEpicStartTime(List<Integer> listOfSubtaskIdOfTheFirstEpicTask); //
+
+    long getterEpicDuration(List<Integer> listOfSubtaskIdOfTheFirstEpicTask);
+
+    LocalDateTime getterEpicEndTime(List<Integer> listOfSubTaskId);
+
 }
 

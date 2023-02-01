@@ -12,18 +12,6 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
     private final Map<Integer, Node> hashMapHistory = new HashMap<>();
     private static final InMemoryHistoryManager CustomLinkedList = new InMemoryHistoryManager();
 
-    @Override
-    public void add(Task task) {
-
-        int taskId = task.getId();
-        boolean haveNode = hashMapHistory.containsKey(taskId);
-        if (haveNode) {
-            remove(taskId);
-        }
-        CustomLinkedList.linkLast(task);
-        hashMapHistory.put(taskId, last);
-    }
-
     public void linkLast(Task task) {
         final Node lastTask = last;
         final Node newNode = new Node(lastTask, task, null);
@@ -63,7 +51,19 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
     }
 
     @Override
-    public void remove(int id){
+    public void addTaskInHistory(Task task) {
+
+        int taskId = task.getId();
+        boolean haveNode = hashMapHistory.containsKey(taskId);
+        if (haveNode) {
+            removeFromHistory(taskId);
+        }
+        CustomLinkedList.linkLast(task);
+        hashMapHistory.put(taskId, last);
+    }
+
+    @Override
+    public void removeFromHistory(int id){
         Node node = hashMapHistory.get(id);
         if (node != null) {
             removeNode(node);

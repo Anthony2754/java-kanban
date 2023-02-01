@@ -1,15 +1,19 @@
 package tasks;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 public class Subtask extends Task {
     private int epicId;
 
-    public Subtask(int epicId, String subtaskName, String subtaskDescription, Status subtaskStatus) {
-        super(subtaskName, subtaskDescription, subtaskStatus);
+    public Subtask(int epicId, String subtaskName, String subtaskDescription, Status subtaskStatus,
+                   LocalDateTime startTime, long duration) {
+        super(subtaskName, subtaskDescription, subtaskStatus, startTime, duration);
         this.epicId = epicId;
     }
-    public Subtask(int subtaskId, int epicId, String subtaskName, String subtaskDescription, Status subtaskStatus) {
-        super(subtaskName, subtaskDescription, subtaskStatus);
+    public Subtask(int subtaskId, int epicId, String subtaskName, String subtaskDescription, Status subtaskStatus,
+                   LocalDateTime startTime, long duration) {
+        super(subtaskName, subtaskDescription, subtaskStatus, startTime, duration);
         this.setId(subtaskId);
         this.epicId = epicId;
     }
@@ -38,11 +42,32 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
-        "id= " + getId() +
-        ", epicId= " + epicId +
-        ", subtaskName= " + getName() +
-        ", description= " + getDescription() +
-        ", status= " + getStatus() + "}";
+
+        String startTime = null;
+        String endTime = null;
+
+        if (getStartTime() != null) {
+            startTime = getStartTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        }
+        if (getEndTime() != null) {
+            endTime = getEndTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        }
+
+        String subtaskToString = null;
+
+        try {
+            subtaskToString = "Subtask{" +
+                    "id= " + getId() +
+                    ", epicId= " + epicId +
+                    ", subtaskName= " + getName() +
+                    ", description= " + getDescription() +
+                    ", status= " + getStatus() +
+                    ", startTime= " + startTime +
+                    ", endTime= " + endTime +
+                    ", duration= " + getDuration() + "}";
+        } catch (NullPointerException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return subtaskToString;
     }
 }
