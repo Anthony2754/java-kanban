@@ -280,8 +280,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 arrayListIdFromHistory.add(task.getId());
             }
         }
+
         return arrayListIdFromHistory.toString().replaceFirst("\\[", "")
-                .replaceFirst("]", "").replaceAll(" ", "");
+                .replaceFirst("]", "");
     }
 
     static List<Integer> historyFromString(String value) {
