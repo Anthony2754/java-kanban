@@ -1,7 +1,9 @@
 package managers;
 
+import servers.KVTaskClient;
 import tasks.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +20,11 @@ public interface TaskManager {
     void addSubtaskInEpic(Subtask subtask, Epic epic);
 
 
-    ArrayList<Task> getTreeMapTask();
+    List<Task> getTreeMapTask();
 
-    ArrayList<Epic> getTreeMapEpic();
+    List<Epic> getTreeMapEpic();
 
-    ArrayList<Subtask> getTreeMapSubtask();
+    List<Subtask> getTreeMapSubtask();
 
 
     void deletingAllTasks();
@@ -76,5 +78,8 @@ public interface TaskManager {
 
     LocalDateTime getterEpicEndTime(List<Integer> listOfSubTaskId);
 
+    KVTaskClient getKVTaskClient();
+
+    Integer toJson(String key) throws IOException, InterruptedException;
 }
 

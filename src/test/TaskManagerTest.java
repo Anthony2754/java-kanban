@@ -1,6 +1,8 @@
 package test;
 
 import managers.TaskManager;
+import managers.exceptions.ManagerCreateException;
+import servers.KVServer;
 import tasks.Epic;
 import tasks.Status;
 import static tasks.Status.*;
@@ -10,6 +12,7 @@ import tasks.Task;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -40,9 +43,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
     List<Task> listTask;
     List<Epic> listEpic;
     List<Subtask> listSubtask;
+    List<Task> listOfTaskHistory;
+    static KVServer kVServer;
+    Integer statusCode;
 
     @BeforeEach
-    public void BeforeEach() {
+    public void BeforeEach() throws ManagerCreateException {
 
         manager = createManager();
 
@@ -266,6 +272,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         listEpic = manager.getTreeMapEpic();
 
+
+
         assertNotNull(listEpic, "Список Epic задач пуст");
 
         Epic expected = new Epic(1, "Сходить в магазин", "Купить овощи фрукты и мясо",
@@ -282,6 +290,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void saveSubtask() {
 
         listSubtask = manager.getTreeMapSubtask();
+
 
         assertNotNull(listSubtask, "Список Subtask задач пуст");
 
@@ -300,6 +309,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void getTaskById() {
 
         listTask = manager.getTreeMapTask();
+
 
         assertNotNull(listTask, "Список Task задач пуст");
 

@@ -1,7 +1,10 @@
 package managers;
 
+import managers.exceptions.*;
 import tasks.*;
+import servers.KVTaskClient;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -11,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Epic> treeMapEpic = new TreeMap<>();
     private final Map<Integer, Subtask> treeMapSubtask = new TreeMap<>();
     private int id = 0;
-    protected final HistoryManager<Task> inMemoryHistoryManager = Managers.getDefaultHistory();
+    protected HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
     public void setId(int id) {
         this.id = id;
@@ -49,7 +52,7 @@ public class InMemoryTaskManager implements TaskManager {
     });
 
     private Set<Task> getPrioritizedTasks() {
-        return treeSetPrioritizedTasks;  // size 2
+        return treeSetPrioritizedTasks;
     }
 
     private LocalDateTime getEpicStartTime(List<Integer> listSubtaskId) {
@@ -150,16 +153,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Task> getTreeMapTask() {
+
         return new ArrayList<>(treeMapTask.values());
     }
 
     @Override
     public ArrayList<Epic> getTreeMapEpic() {
+
         return new ArrayList<>(treeMapEpic.values());
     }
 
     @Override
     public ArrayList<Subtask> getTreeMapSubtask() {
+
         return new ArrayList<>(treeMapSubtask.values());
     }
 
@@ -218,28 +224,37 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtask != null) {
             inMemoryHistoryManager.addTaskInHistory(subtask);
         }
-        return subtask;
-    }
 
+        return subtask;
+
+    }
 
     @Override
     public Task createTask(Task task) {
         checkTimeCrossing(task);
-        return new Task(task.getName(), task.getDescription(), task.getStatus(), task.getStartTime(),
+
+        return new Task(task.getId(), task.getName(), task.getDescription(), task.getStatus(), task.getStartTime(),
                 task.getDuration());
     }
 
     @Override
     public Epic createEpic(Epic epic) {
-        return new Epic(epic.getName(), epic.getDescription(), epic.getArrayListSubtaskId(), epic.getStatus(),
-                epic.getStartTime(), epic.getDuration());
+
+            Epic newEpic = new Epic(epic.getName(), epic.getDescription(), epic.getArrayListSubtaskId(), epic.getStatus(),
+                    epic.getStartTime(), epic.getDuration());
+
+            return newEpic;
+
     }
 
     @Override
     public Subtask createSubtask(Subtask subtask) {
         checkTimeCrossing(subtask);
-        return new Subtask(subtask.getEpicId(), subtask.getName(), subtask.getDescription(), subtask.getStatus(),
-                subtask.getStartTime(), subtask.getDuration());
+
+                Subtask newSubtask = new Subtask(subtask.getEpicId(), subtask.getName(), subtask.getDescription(), subtask.getStatus(),
+                        subtask.getStartTime(), subtask.getDuration());
+                return newSubtask;
+
     }
 
 
@@ -432,6 +447,18 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public LocalDateTime getterEpicEndTime(List<Integer> listSubtaskId) {
         return getEpicEndTime(listSubtaskId);
+    }
+
+
+
+    @Override
+    public KVTaskClient getKVTaskClient() {
+        return null;
+    }
+
+    @Override
+    public Integer toJson(String key) throws IOException, InterruptedException {
+        return null;
     }
 
 }

@@ -5,7 +5,7 @@ import tasks.Task;
 
 import java.util.*;
 
-public class InMemoryHistoryManager implements HistoryManager<Task> {
+public class InMemoryHistoryManager implements HistoryManager {
 
     private static Node first;
     private static Node last;

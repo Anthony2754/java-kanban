@@ -1,6 +1,6 @@
 package managers;
 
-import tasks.Task;
+import java.io.IOException;
 
 public class Managers {
 
@@ -8,7 +8,11 @@ public class Managers {
         return new InMemoryTaskManager();
     }
 
-    public static HistoryManager<Task> getDefaultHistory() {
+    public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
+    }
+
+    public static TaskManager getDefaultManager(String key) throws IOException {
+        return HttpTaskManager.fromJson(key);
     }
 }

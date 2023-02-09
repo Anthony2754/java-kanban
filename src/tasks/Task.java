@@ -116,16 +116,31 @@ public class Task {
         String taskToString = null;
 
         try {
-            taskToString = "Task{" +
-                    "id= " + id +
-                    ", taskName= " + name +
-                    ", description= " + description +
-                    ", status= " + status +
-                    ", startTime= " + startTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
-                    ", endTime= " + endTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
-                    ", duration= " + duration + "}";
+
+            if (startTime != null) {
+                taskToString = "Task{" +
+                        "id='" + id + '\''  +
+                        ", name='" + name + '\'' +
+                        ", description='" + description + '\'' +
+                        ", status='" + status + '\''  +
+                        ", startTime='" + startTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) + '\''  +
+                        ", duration='" + duration + '\''  +
+                        ", endTime='" + endTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) + '\''  +
+                        "}\n";
+
+            } else {
+                taskToString = "Task{" +
+                        "id='" + id + '\''  +
+                        ", name='" + name + '\'' +
+                        ", description='" + description + '\'' +
+                        ", status='" + status + '\''  +
+                        ", startTime='" + null + '\''  +
+                        ", duration='" + duration + '\''  +
+                        ", endTime='" + null + '\''  +
+                        "}\n";
+            }
         } catch (NullPointerException exc) {
-            System.out.println("Ошибка формата ввода LocalDateTime: " + exc.getMessage());
+            System.out.println("Ошибка ввода LocalDateTime: " + exc.getMessage());
         }
         return taskToString;
     }
