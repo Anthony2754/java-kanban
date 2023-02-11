@@ -119,24 +119,24 @@ public class Task {
 
             if (startTime != null) {
                 taskToString = "Task{" +
-                        "id='" + id + '\''  +
-                        ", name='" + name + '\'' +
-                        ", description='" + description + '\'' +
-                        ", status='" + status + '\''  +
-                        ", startTime='" + startTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) + '\''  +
-                        ", duration='" + duration + '\''  +
-                        ", endTime='" + endTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) + '\''  +
+                        "id=" + id  +
+                        ", name=" + name +
+                        ", description=" + description +
+                        ", status=" + status  +
+                        ", startTime=" + startTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))  +
+                        ", duration=" + duration  +
+                        ", endTime=" + endTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))  +
                         "}\n";
 
             } else {
                 taskToString = "Task{" +
-                        "id='" + id + '\''  +
-                        ", name='" + name + '\'' +
-                        ", description='" + description + '\'' +
-                        ", status='" + status + '\''  +
-                        ", startTime='" + null + '\''  +
-                        ", duration='" + duration + '\''  +
-                        ", endTime='" + null + '\''  +
+                        "id=" + id +
+                        ", name=" + name +
+                        ", description=" + description +
+                        ", status=" + status +
+                        ", startTime=" + null +
+                        ", duration=" + duration +
+                        ", endTime=" + null +
                         "}\n";
             }
         } catch (NullPointerException exc) {

@@ -52,6 +52,16 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         manager = createManager();
 
+
+        task1 = manager.createTask(new Task("Прогуляться", "Прогуляться по парку", NEW,
+                LocalDateTime.of(2023, 2, 1, 21, 0), 30L));
+        manager.saveInTreeMapTask(task1);
+
+        task2 = manager.createTask(new Task("Пообедать", "Первое второе и компот", NEW,
+                LocalDateTime.of(2023, 2, 1, 21, 35), 15L));
+        manager.saveInTreeMapTask(task2);
+
+
         arrayListSubtaskIdEpic1 = new ArrayList<>();
         statusEpic1 = manager.getterEpicStatus(arrayListSubtaskIdEpic1);
         startTimeEpic1 = manager.getterEpicStartTime(arrayListSubtaskIdEpic1);
@@ -61,6 +71,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 arrayListSubtaskIdEpic1, statusEpic1, startTimeEpic1, durationEpic1));
 
         manager.saveInTreeMapEpic(epic1);
+
 
         subtask1 = manager.createSubtask(new Subtask(epic1.getId(), "Купить овощи",
                 "Картошку капусту морковку свеклу", DONE, LocalDateTime.of(2023, 2,
@@ -98,13 +109,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.saveInTreeMapEpic(epic2);
 
 
-        task1 = manager.createTask(new Task("Прогуляться", "Прогуляться по парку", NEW,
-                LocalDateTime.of(2023, 2, 1, 21, 0), 30L));
-        manager.saveInTreeMapTask(task1);
 
-        task2 = manager.createTask(new Task("Пообедать", "Первое второе и компот", NEW,
-                LocalDateTime.of(2023, 2, 1, 21, 35), 15L));
-        manager.saveInTreeMapTask(task2);
+
     }
 
     @Test
@@ -223,21 +229,21 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertNotNull(listEpic, "Список Epic пуст");
         assertNotNull(listSubtask, "Список Subtask пуст");
 
-        Task expected1 = new Task(6,"Прогуляться", "Прогуляться по парку", NEW,
+        Task expected1 = new Task(1,"Прогуляться", "Прогуляться по парку", NEW,
                 LocalDateTime.of(2023, 2, 1, 21, 0), 30L);
         Task actual1 = task1;
 
         assertEquals(expected1, actual1,"Task задача создана не правильно");
 
-        Epic expected2 = new Epic(1, "Сходить в магазин", "Купить овощи фрукты и мясо",
-                new ArrayList<>(List.of(2, 3, 4)), IN_PROGRESS,
+        Epic expected2 = new Epic(3, "Сходить в магазин", "Купить овощи фрукты и мясо",
+                new ArrayList<>(List.of(4, 5, 6)), IN_PROGRESS,
                 LocalDateTime.of(2023, 2, 1, 20, 30), 15L);
 
         Epic actual2 = epic1;
 
         assertEquals(expected2, actual2,"Epic задача создана не правильно");
 
-        Subtask expected3 = new Subtask(2, 1, "Купить овощи",
+        Subtask expected3 = new Subtask(4, 3, "Купить овощи",
                 "Картошку капусту морковку свеклу", DONE,
                 LocalDateTime.of(2023, 2, 1, 20, 30), 5L);
 
@@ -257,10 +263,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(listTask, "Список Task задач пуст");
 
-        Task expected = new Task(6, "Прогуляться", "Прогуляться по парку", NEW,
+        Task expected = new Task(1, "Прогуляться", "Прогуляться по парку", NEW,
                 LocalDateTime.of(2023, 2, 1, 21, 0), 30L);
 
-        Task actual = manager.getTaskById(6);
+        Task actual = manager.getTaskById(1);
 
         assertEquals(expected, actual,"Task сохранена не правильно");
 
@@ -273,11 +279,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
         listEpic = manager.getTreeMapEpic();
 
 
-
         assertNotNull(listEpic, "Список Epic задач пуст");
 
-        Epic expected = new Epic(1, "Сходить в магазин", "Купить овощи фрукты и мясо",
-                new ArrayList<>(List.of(2, 3, 4)), IN_PROGRESS,
+        Epic expected = new Epic(3, "Сходить в магазин", "Купить овощи фрукты и мясо",
+                new ArrayList<>(List.of(4, 5, 6)), IN_PROGRESS,
                 LocalDateTime.of(2023, 2, 1, 20, 30),15L);
         Epic actual = manager.getEpicById(epic1.getId());
 
@@ -294,7 +299,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(listSubtask, "Список Subtask задач пуст");
 
-        Subtask expected = new Subtask(2, 1, "Купить овощи",
+        Subtask expected = new Subtask(4, 3, "Купить овощи",
                 "Картошку капусту морковку свеклу", DONE,
                 LocalDateTime.of(2023, 2, 1, 20, 30), 5L);
 
@@ -313,10 +318,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(listTask, "Список Task задач пуст");
 
-        Task expected = new Task(6, "Прогуляться", "Прогуляться по парку", NEW
+        Task expected = new Task(1, "Прогуляться", "Прогуляться по парку", NEW
                 , LocalDateTime.of(2023, 2, 1, 21, 0), 30L);
 
-        Task actual = manager.getTaskById(6);
+        Task actual = manager.getTaskById(1);
 
         assertEquals(expected, actual,"Task получена не правильно");
 
@@ -330,8 +335,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(listEpic, "Список задач пуст");
 
-        Epic expected = new Epic(1, "Сходить в магазин", "Купить овощи фрукты и мясо",
-                new ArrayList<>(List.of(2, 3, 4)), IN_PROGRESS,
+        Epic expected = new Epic(3, "Сходить в магазин", "Купить овощи фрукты и мясо",
+                new ArrayList<>(List.of(4, 5, 6)), IN_PROGRESS,
                 LocalDateTime.of(2023, 2, 1, 20, 30),15L);
 
         Epic actual = manager.getEpicById(epic1.getId());
@@ -348,7 +353,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(listSubtask, "Список Subtask пуст");
 
-        Subtask expected = new Subtask(2, 1, "Купить овощи",
+        Subtask expected = new Subtask(4, 3, "Купить овощи",
                 "Картошку капусту морковку свеклу", DONE,
                 LocalDateTime.of(2023, 2, 1, 20, 30), 5L);
         Subtask actual = manager.getSubtaskById(subtask1.getId());
@@ -365,11 +370,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(listTask, "Список Task пуст");
 
-        Task expected = new Task(6, "Прогуляться", "Прогуляться по парку", DONE,
+        Task expected = new Task(1, "Прогуляться", "Прогуляться по парку", DONE,
                 LocalDateTime.of(3033, 3, 30, 13, 33), 33L);
 
         manager.taskUpdate(expected);
-        Task actual = manager.getTaskById(6);
+        Task actual = manager.getTaskById(1);
 
         assertEquals(expected, actual,"Задача обновлена не правильно");
 
@@ -383,8 +388,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(listEpic, "Список Epic пуст");
 
-        Epic expected = new Epic(1, "Сходить в магазин", "Купить овощи фрукты и мясо",
-                new ArrayList<>(List.of(2, 3, 4)), NEW,
+        Epic expected = new Epic(3, "Сходить в магазин", "Купить овощи фрукты и мясо",
+                new ArrayList<>(List.of(4, 5, 6)), NEW,
                 LocalDateTime.of(3033, 3, 30, 13, 33), 33L);
 
         manager.epicUpdate(expected);
@@ -402,7 +407,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(listSubtask, "Список Subtask пуст");
 
-        Subtask expected = new Subtask(2, 1, "Купить овощи",
+        Subtask expected = new Subtask(4, 1, "Купить овощи",
                 "Картошку капусту морковку свеклу", DONE,
                 LocalDateTime.of(3033, 3, 30, 13, 33), 33L);
 

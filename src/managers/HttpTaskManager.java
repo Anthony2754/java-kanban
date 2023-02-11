@@ -79,17 +79,26 @@ public class HttpTaskManager extends FileBackedTasksManager {
             if (managerFromGson.contains("},")) {
                 String[] array = managerFromGson.split("},\n\\s*");
                 for (String gsonFormat : array) {
-                    if (!gsonFormat.contains("}")) {
-                        gsonFormat += "}";
-                    }
 
                     if (gsonFormat.contains("arrayListSubtaskId")) {
                         Epic epicTask = FileBackedTasksManager.getterEpicFromGson(gsonFormat);
                         httpTaskManager.createEpic(epicTask);
+                        httpTaskManager.saveInTreeMapEpic(epicTask);
                     } else if (gsonFormat.contains("epicId")) {
+
+                        if (!gsonFormat.contains("}")) {
+                            gsonFormat += "}";
+                        }
+
                         Subtask subTask = gson.fromJson(gsonFormat, Subtask.class);
                         httpTaskManager.createSubtask(subTask);
+                        httpTaskManager.saveInTreeMapSubtask(subTask);
                     } else if (gsonFormat.contains("listOfIdsFromHistory")) {
+
+                        if (!gsonFormat.contains("}")) {
+                            gsonFormat += "}";
+                        }
+
                         String ids = gsonFormat
                                 .replaceFirst("\\{\\s*\"listOfIdsFromHistory\": \\[\\s*", "")
                                 .replaceFirst("\\s*]\\s*}", "");
@@ -119,17 +128,27 @@ public class HttpTaskManager extends FileBackedTasksManager {
                             }
                         }
                     } else {
+
+                        if (!gsonFormat.contains("}")) {
+                                 gsonFormat += "}";
+                               }
+
                         Task task = gson.fromJson(gsonFormat, Task.class);
-                        httpTaskManager.createTask(task);////////////////////////////////////////////////////////////////
+                        if (task.getDescription() != null && task.getName() != null) {
+                            httpTaskManager.createTask(task);
+                            httpTaskManager.saveInTreeMapTask(task);
+                        }
                     }
                 }
             } else {
                 if (managerFromGson.contains("arrayListSubtaskId")) {
                     Epic epic = FileBackedTasksManager.getterEpicFromGson(managerFromGson);
                     httpTaskManager.createEpic(epic);
+                    httpTaskManager.saveInTreeMapEpic(epic);
                 } else if (managerFromGson.contains("epicId")) {
                     Subtask subtask = gson.fromJson(managerFromGson, Subtask.class);
                     httpTaskManager.createSubtask(subtask);
+                    httpTaskManager.saveInTreeMapSubtask(subtask);
                 } else if (managerFromGson.contains("listIdFromHistory")) {
                     String ids = managerFromGson
                             .replaceFirst("\\{\\s*\"listIdFromHistory\": \\[\\s*", "")
@@ -160,8 +179,12 @@ public class HttpTaskManager extends FileBackedTasksManager {
                         }
                     }
                 } else {
-                    Task task = gson.fromJson(managerFromGson, Task.class);
-                    httpTaskManager.createTask(task); ///////////////////////////////////////////////////////////////////
+
+                        Task task = gson.fromJson(managerFromGson, Task.class);
+                        if (task.getDescription() != null && task.getName() != null) {
+                        httpTaskManager.createTask(task);
+                        httpTaskManager.saveInTreeMapTask(task);
+                    }
                 }
             }
         }

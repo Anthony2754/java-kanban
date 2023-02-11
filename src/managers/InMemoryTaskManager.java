@@ -20,20 +20,36 @@ public class InMemoryTaskManager implements TaskManager {
         this.id = id;
     }
 
-    public void checkTimeCrossing(Task task) {
+
+
+
+
+    public void checkTimeCrossing(Task task) throws ManagerCreateException {
         LocalDateTime startTime = task.getStartTime();
         LocalDateTime endTime = task.getEndTime();
-        Set<Task> setSorted = getPrioritizedTasks();
+        Set<Task> setSorted;
+        try {
+            setSorted = getPrioritizedTasks();
+        } catch (ManagerGetException e) {
+            return;
+        }
 
-        for (var taskFromTheList : setSorted) {
-            if (taskFromTheList.getStartTime() != null) {
-                LocalDateTime startTimeFromSetSorted = taskFromTheList.getStartTime();
-                LocalDateTime endTimeTaskFrmSetSorted = taskFromTheList.getEndTime();
-                if ((startTime.isAfter(startTimeFromSetSorted) && startTime.isBefore(endTimeTaskFrmSetSorted))
-                        || (endTime.isAfter(startTimeFromSetSorted) && endTime.isBefore(endTimeTaskFrmSetSorted))
-                        || startTimeFromSetSorted.isAfter(startTime) && endTimeTaskFrmSetSorted.isBefore(endTime)
-                        || startTime.isAfter(startTimeFromSetSorted) && endTime.isBefore(endTimeTaskFrmSetSorted)) {
-                    throw new ManagerCreateException("Задачи и подзадачи пересекаются по времени");
+        if (startTime != null) {
+            for (var taskFromTheList : setSorted) {
+                if (task.getId() == taskFromTheList.getId()) {
+                    continue;
+                }
+
+                if (taskFromTheList.getStartTime() != null) {
+                    LocalDateTime startTimeFromSetSorted = taskFromTheList.getStartTime();
+                    LocalDateTime endTimeFromSetSorted = taskFromTheList.getEndTime();
+                    if ((startTime.isAfter(startTimeFromSetSorted) && startTime.isBefore(endTimeFromSetSorted))
+                            || (endTime.isAfter(startTimeFromSetSorted) && endTime.isBefore(endTimeFromSetSorted))
+                            || (startTimeFromSetSorted.isAfter(startTime) && endTimeFromSetSorted.isBefore(endTime))
+                            || (startTime.isAfter(startTimeFromSetSorted) && endTime.isBefore(endTimeFromSetSorted))
+                            || (startTime.equals(startTimeFromSetSorted)) || (endTime.equals(endTimeFromSetSorted))) {
+                        throw new ManagerCreateException("Задачи и подзадачи пересекаются по времени");
+                    }
                 }
             }
         }
@@ -114,9 +130,23 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void saveInTreeMapTask(Task task) {
-        checkTimeCrossing(task);
-        id += 1;
-        task.setId(id);
+
+        int id = task.getId();
+        if (id == 0) {
+            id += 1;
+
+            while (treeMapTask.containsKey(id)) {
+                id++;
+            }
+            while (treeMapEpic.containsKey(id)) {
+                id++;
+            }
+            while (treeMapSubtask.containsKey(id)) {
+                id++;
+            }
+            task.setId(id);
+        }
+
         treeMapTask.put(id, task);
         setId(id);
         treeSetPrioritizedTasks.add(task);
@@ -124,17 +154,41 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void saveInTreeMapEpic(Epic epic) {
-        id += 1;
-        epic.setId(id);
+        int id = epic.getId();
+        if (id == 0) {
+            id += 1;
+
+            while (treeMapTask.containsKey(id)) {
+                id++;
+            }
+            while (treeMapEpic.containsKey(id)) {
+                id++;
+            }
+            while (treeMapSubtask.containsKey(id)) {
+                id++;
+            }
+            epic.setId(id);
+        }
         treeMapEpic.put(id, epic);
         setId(id);
     }
 
     @Override
     public void saveInTreeMapSubtask(Subtask subtask) {
-        checkTimeCrossing(subtask);
-        id += 1;
-        subtask.setId(id);
+        int id = subtask.getId();
+        if (id == 0) {
+            id += 1;
+            while (treeMapTask.containsKey(id)) {
+                id++;
+            }
+            while (treeMapEpic.containsKey(id)) {
+                id++;
+            }
+            while (treeMapSubtask.containsKey(id)) {
+                id++;
+            }
+            subtask.setId(id);
+        }
         treeMapSubtask.put(id, subtask);
         setId(id);
         treeSetPrioritizedTasks.add(subtask);
@@ -232,28 +286,46 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task createTask(Task task) {
         checkTimeCrossing(task);
-
-        return new Task(task.getId(), task.getName(), task.getDescription(), task.getStatus(), task.getStartTime(),
+        if ( task.getId() != 0) {
+        Task task1 = new Task(task.getId(), task.getName(), task.getDescription(), task.getStatus(), task.getStartTime(),
                 task.getDuration());
+       // saveInTreeMapTask(task1);
+        return task1;
+        }
+        Task task1 = new Task(task.getName(), task.getDescription(), task.getStatus(), task.getStartTime(),
+                task.getDuration());
+       // saveInTreeMapTask(task1);
+        return task1;
     }
 
     @Override
     public Epic createEpic(Epic epic) {
-
-            Epic newEpic = new Epic(epic.getName(), epic.getDescription(), epic.getArrayListSubtaskId(), epic.getStatus(),
+        if (epic.getId() != 0) {
+            Epic newEpic = new Epic(epic.getId(), epic.getName(), epic.getDescription(), epic.getArrayListSubtaskId(), epic.getStatus(),
                     epic.getStartTime(), epic.getDuration());
-
+          //  saveInTreeMapEpic(newEpic);
             return newEpic;
+        }
+        Epic newEpic = new Epic(epic.getName(), epic.getDescription(), epic.getArrayListSubtaskId(), epic.getStatus(),
+                epic.getStartTime(), epic.getDuration());
+      //  saveInTreeMapEpic(newEpic);
+        return newEpic;
 
     }
 
     @Override
     public Subtask createSubtask(Subtask subtask) {
         checkTimeCrossing(subtask);
-
-                Subtask newSubtask = new Subtask(subtask.getEpicId(), subtask.getName(), subtask.getDescription(), subtask.getStatus(),
-                        subtask.getStartTime(), subtask.getDuration());
-                return newSubtask;
+        if (subtask.getId() != 0) {
+            Subtask newSubtask = new Subtask(subtask.getId(), subtask.getEpicId(), subtask.getName(), subtask.getDescription(), subtask.getStatus(),
+                    subtask.getStartTime(), subtask.getDuration());
+          //   saveInTreeMapSubtask(newSubtask);
+             return newSubtask;
+        }
+        Subtask newSubtask = new Subtask(subtask.getEpicId(), subtask.getName(), subtask.getDescription(), subtask.getStatus(),
+                subtask.getStartTime(), subtask.getDuration());
+      //  saveInTreeMapSubtask(newSubtask);
+        return newSubtask;
 
     }
 

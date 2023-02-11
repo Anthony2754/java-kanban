@@ -40,6 +40,14 @@ class HistoryManagerTest extends InMemoryTaskManager {
         startTimeEpic1 = getterEpicStartTime(arrayListSubtaskIdEpic1);
         durationEpic1 = getterEpicDuration(arrayListSubtaskIdEpic1);
 
+        task1 = new Task("Прогуляться", "Прогуляться по парку", NEW,
+                LocalDateTime.now().plusMinutes(3L), 30L);
+        saveInTreeMapTask(task1);
+
+        task2 = new Task("Пообедать", "Первое второе и компот", NEW,
+                LocalDateTime.now().plusMinutes(35L), 10L);
+        saveInTreeMapTask(task2);
+
         epic1 = createEpic(new Epic("Сходить в магазин", "Купить овощи фрукты и мясо"
                 , arrayListSubtaskIdEpic1, statusEpic1, startTimeEpic1, durationEpic1));
         saveInTreeMapEpic(epic1);
@@ -53,13 +61,7 @@ class HistoryManagerTest extends InMemoryTaskManager {
         epicUpdate(epic1);
 
 
-        task1 = new Task("Прогуляться", "Прогуляться по парку", NEW,
-                LocalDateTime.now().plusMinutes(3L), 30L);
-        saveInTreeMapTask(task1);
 
-        task2 = new Task("Пообедать", "Первое второе и компот", NEW,
-                LocalDateTime.now().plusMinutes(35L), 10L);
-        saveInTreeMapTask(task2);
 
         historyManager.addTaskInHistory(task1);
         historyManager.addTaskInHistory(task1);

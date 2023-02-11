@@ -10,6 +10,7 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -76,20 +77,23 @@ class HttpTaskManagerTest extends TaskManagerTest {
         List<Task> listActualTaskHistory = actualManager.getHistory();
         assertNotNull(listActualTaskHistory, "Список истории задач пуст");
 
-
         assertEquals(manager.getTaskById(task1.getId()), actualManager.getTaskById(task1.getId())
-                , "Задача " + task1 + " восстановилась не правильно");
+               , "Задача " + task1 + " восстановилась не правильно");
         assertEquals(manager.getTaskById(task2.getId()), actualManager.getTaskById(task2.getId())
                 , "Задача " + task2 + " восстановилась не правильно");
+
         assertEquals(manager.getEpicById(epic1.getId()), actualManager.getEpicById(epic1.getId())
                 , "Задача " + epic1 + " восстановилась не правильно");
         assertEquals(manager.getEpicById(epic2.getId()), actualManager.getEpicById(epic2.getId())
                 , "Задача " + epic2 + " восстановилась не правильно");
+
         assertEquals(manager.getSubtaskById(subtask1.getId()), actualManager.getSubtaskById(subtask1.getId())
                 , "Задача " + subtask1 + " восстановилась не правильно");
         assertEquals(manager.getSubtaskById(subtask2.getId()), actualManager.getSubtaskById(subtask2.getId())
                 , "Задача " + subtask2 + " восстановилась не правильно");
         assertEquals(manager.getSubtaskById(subtask3.getId()), actualManager.getSubtaskById(subtask3.getId())
                 , "Задача " + subtask3 + " восстановилась не правильно");
+
+
     }
 }
