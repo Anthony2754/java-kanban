@@ -1,6 +1,6 @@
 package servers.handlers;
 
-import adapters.adapterForLocalDataTime;
+import adapters.AdapterForLocalDataTime;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.Headers;
@@ -8,10 +8,9 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import managers.exceptions.ManagerCreateException;
 import managers.exceptions.ManagerDeleteException;
-import managers.FileBackedTasksManager;
 import managers.Managers;
 import managers.TaskManager;
-import tasks.Epic;
+import tasks.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,12 +20,12 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class epicHandler implements HttpHandler {
+public class TaskHandler implements HttpHandler {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .serializeNulls()
-            .registerTypeAdapter(LocalDateTime.class, new adapterForLocalDataTime())
+            .registerTypeAdapter(LocalDateTime.class, new AdapterForLocalDataTime())
             .create();
 
     @Override
@@ -49,33 +48,35 @@ public class epicHandler implements HttpHandler {
 
         if ((contentTypeValues != null) && (contentTypeValues.contains("application/json"))) {
             switch (method) {
+
                 case "GET":
-                    if (path.endsWith("/tasks/epic?key=" + key)) {
+                    if (path.endsWith("/tasks/task?key=" + key)) {
 
                         try (OutputStream outputStream = httpExchange.getResponseBody()) {
 
-                            response = gson.toJson(manager.getTreeMapEpic());
+                            response = gson.toJson(manager.getTreeMapTask());
 
                             httpExchange.sendResponseHeaders(200, 0);
                             outputStream.write(response.getBytes(DEFAULT_CHARSET));
                             return;
                         }
-                    } else if (path.startsWith("/tasks/epic?key=" + key + "&id=")) {
+                    } else if (path.startsWith("/tasks/task?key=" + key + "&id=")) {
 
                         int id = Integer.parseInt(path.split("=")[2]);
-                        try (OutputStream os = httpExchange.getResponseBody()) {
+                        try (OutputStream outputStream = httpExchange.getResponseBody()) {
+
+                            response = gson.toJson(manager.getTaskById(id));
 
                             try {
-                                response = gson.toJson(manager.getEpicById(id));
                                 statusCode = manager.toJson(key);
-                            } catch (InterruptedException e) {
+                            } catch (InterruptedException exc) {
                                 httpExchange.sendResponseHeaders(404, 0);
-                                response = e.getMessage();
-                                os.write(response.getBytes(DEFAULT_CHARSET));
+                                response = exc.getMessage();
+                                outputStream.write(response.getBytes(DEFAULT_CHARSET));
                             }
 
                             httpExchange.sendResponseHeaders(statusCode, 0);
-                            os.write(response.getBytes(DEFAULT_CHARSET));
+                            outputStream.write(response.getBytes(DEFAULT_CHARSET));
                             return;
                         }
                     } else {
@@ -83,48 +84,55 @@ public class epicHandler implements HttpHandler {
                         httpExchange.close();
                     }
                     break;
-                case "POST":
-                    if (path.endsWith("/tasks/epic?key=" + key)) {
 
+                case "POST":
+                    if (path.endsWith("/tasks/task?key=" + key)) {
                         try (InputStream is = httpExchange.getRequestBody()) {
                             body = new String(is.readAllBytes(), DEFAULT_CHARSET);
                         }
 
-                        Epic epicTask = FileBackedTasksManager.getterEpicFromGson(body);
-                        manager.createTask(epicTask);
+                        Task task = gson.fromJson(body, Task.class);
+
                         try {
+                            manager.createTask(task);
                             statusCode = manager.toJson(key);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+
+                        } catch (ManagerCreateException | InterruptedException exc) {
+
+                            try (OutputStream os = httpExchange.getResponseBody()) {
+                                httpExchange.sendResponseHeaders(404, 0);
+                                response = exc.getMessage();
+                                os.write(response.getBytes(DEFAULT_CHARSET));
+                            }
                         }
 
                         httpExchange.sendResponseHeaders(statusCode, 0);
                         httpExchange.close();
                         return;
-                    } else if (path.startsWith("/tasks/epic?key=" + key + "&id=")) {
+                    } else if (path.startsWith("/tasks/task?key=" + key + "&id=")) {
 
                         int id = Integer.parseInt(path.split("=")[2]);
                         try (InputStream is = httpExchange.getRequestBody()) {
                             body = new String(is.readAllBytes(), DEFAULT_CHARSET);
                         }
 
-                        Epic epictData = gson.fromJson(body, Epic.class);
-                        Epic epic = new Epic(id
-                                , epictData.getName()
-                                , epictData.getDescription()
-                                , epictData.getArrayListSubtaskId()
-                                , epictData.getStatus()
-                                , epictData.getStartTime()
-                                , epictData.getDuration());
+                        Task taskData = gson.fromJson(body, Task.class);
+                        Task task = new Task(
+                                id
+                                , taskData.getName()
+                                , taskData.getDescription()
+                                , taskData.getStatus()
+                                , taskData.getStartTime()
+                                , taskData.getDuration());
                         try {
-                            manager.epicUpdate(epic);
+                            manager.taskUpdate(task);
                             statusCode = manager.toJson(key);
-                        } catch (ManagerCreateException | InterruptedException exc) {
+                        } catch (ManagerCreateException | InterruptedException e) {
 
-                            try (OutputStream outputStream = httpExchange.getResponseBody()) {
+                            try (OutputStream os = httpExchange.getResponseBody()) {
                                 httpExchange.sendResponseHeaders(404, 0);
-                                response = exc.getMessage();
-                                outputStream.write(response.getBytes(DEFAULT_CHARSET));
+                                response = e.getMessage();
+                                os.write(response.getBytes(DEFAULT_CHARSET));
                             }
                         }
 
@@ -136,36 +144,37 @@ public class epicHandler implements HttpHandler {
                         httpExchange.close();
                     }
                     break;
+
                 case "DELETE":
-                    if (path.endsWith("/tasks/epic?key=" + key)) {
+                    if (path.endsWith("/tasks/task?key=" + key)) {
 
                         try {
-                            manager.deletingAllEpics();
+                            manager.deletingAllTasks();
                             statusCode = manager.toJson(key);
-                        } catch (ManagerDeleteException | InterruptedException exc) {
+                        } catch (ManagerDeleteException | InterruptedException e) {
 
-                            try (OutputStream outputStream = httpExchange.getResponseBody()) {
+                            try (OutputStream os = httpExchange.getResponseBody()) {
                                 httpExchange.sendResponseHeaders(404, 0);
-                                response = exc.getMessage();
-                                outputStream.write(response.getBytes(DEFAULT_CHARSET));
+                                response = e.getMessage();
+                                os.write(response.getBytes(DEFAULT_CHARSET));
                             }
                         }
 
                         httpExchange.sendResponseHeaders(statusCode, 0);
                         httpExchange.close();
                         return;
-                    } else if (path.startsWith("/tasks/epic?key=" + key + "&id=")) {
+                    } else if (path.startsWith("/tasks/task?key=" + key + "&id=")) {
 
                         int id = Integer.parseInt(path.split("=")[2]);
                         try {
-                            manager.deleteEpicById(id);
+                            manager.deleteTaskById(id);
                             statusCode = manager.toJson(key);
                         } catch (ManagerDeleteException | InterruptedException exc) {
 
-                            try (OutputStream outputStream = httpExchange.getResponseBody()) {
+                            try (OutputStream os = httpExchange.getResponseBody()) {
                                 httpExchange.sendResponseHeaders(404, 0);
                                 response = exc.getMessage();
-                                outputStream.write(response.getBytes(DEFAULT_CHARSET));
+                                os.write(response.getBytes(DEFAULT_CHARSET));
                             }
                         }
 

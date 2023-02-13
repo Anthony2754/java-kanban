@@ -1,6 +1,6 @@
 package servers.handlers;
 
-import adapters.adapterForLocalDataTime;
+import adapters.AdapterForLocalDataTime;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.Headers;
@@ -16,12 +16,12 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class taskSHandler implements HttpHandler {
+public class TaskHistoryHandler implements HttpHandler {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .serializeNulls()
-            .registerTypeAdapter(LocalDateTime.class, new adapterForLocalDataTime())
+            .registerTypeAdapter(LocalDateTime.class, new AdapterForLocalDataTime())
             .create();
 
     @Override
@@ -31,6 +31,7 @@ public class taskSHandler implements HttpHandler {
         String method = httpExchange.getRequestMethod();
         String path = String.valueOf(httpExchange.getRequestURI());
         String key = path.split("=")[1];
+
         if (key.contains("&")) {
             key = key.replaceFirst("&.*$", "");
         }
@@ -41,24 +42,29 @@ public class taskSHandler implements HttpHandler {
         TaskManager manager = Managers.getDefaultManager(key);
 
         if ((contentTypeValues != null) && (contentTypeValues.contains("application/json"))) {
-
             if ("GET".equals(method)) {
-                if (path.endsWith("/tasks?key=" + key)) {
+
+                if (path.endsWith("/tasks/history?key=" + key)) {
 
                     try (OutputStream outputStream = httpExchange.getResponseBody()) {
 
-                        response = gson.toJson(manager.getterPrioritizedTasks());
+                        response = gson.toJson(manager.getHistory());
 
                         httpExchange.sendResponseHeaders(200, 0);
                         outputStream.write(response.getBytes(DEFAULT_CHARSET));
                     }
-                }
-            }
+                } else {
 
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                httpExchange.sendResponseHeaders(404, 0);
-                response = "Используйте следующие методы: GET | PUT | DELETE";
-                os.write(response.getBytes(DEFAULT_CHARSET));
+                    httpExchange.sendResponseHeaders(404, 0);
+                    httpExchange.close();
+                }
+            } else {
+
+                try (OutputStream outputStream = httpExchange.getResponseBody()) {
+                    httpExchange.sendResponseHeaders(404, 0);
+                    response = "Используйте следующие методы: GET | PUT | DELETE";
+                    outputStream.write(response.getBytes(DEFAULT_CHARSET));
+                }
             }
         }
     }

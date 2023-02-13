@@ -1,6 +1,6 @@
 package servers.handlers;
 
-import adapters.adapterForLocalDataTime;
+import adapters.AdapterForLocalDataTime;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.Headers;
@@ -21,12 +21,12 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class subtaskHandler implements HttpHandler {
+public class SubtaskHandler implements HttpHandler {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .serializeNulls()
-            .registerTypeAdapter(LocalDateTime.class, new adapterForLocalDataTime())
+            .registerTypeAdapter(LocalDateTime.class, new AdapterForLocalDataTime())
             .create();
 
     @Override

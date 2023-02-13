@@ -19,9 +19,9 @@ import static managers.Managers.getDefaultManager;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class HttpTaskManagerTest extends TaskManagerTest {
+class HttpTaskManagerTest extends TaskManagerTest<TaskManager> {
     String key = "key1";
-    TaskManager manager = new HttpTaskManager(URI.create("http://localhost:8078/"));
+    TaskManager manager = new HttpTaskManager(URI.create("http://localhost:8078/"));////////////////////////////////////////
 
     HttpTaskManagerTest() throws IOException, InterruptedException {
     }
@@ -33,7 +33,7 @@ class HttpTaskManagerTest extends TaskManagerTest {
 
     @BeforeAll
     public static void start() throws IOException {
-        kVServer = new KVServer();
+        kVServer = new KVServer(8078);
         kVServer.start();
     }
 

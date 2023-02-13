@@ -3,12 +3,13 @@ package test;
 import managers.FileBackedTasksManager;
 import managers.TaskManager;
 
+
 import java.io.File;
 
-class FileBackedTasksManagerTest extends TaskManagerTest {
+class FileBackedTasksManagerTest extends TaskManagerTest<TaskManager> {
     TaskManager manager = new FileBackedTasksManager(new File("TestSave.csv"));
 
-    protected FileBackedTasksManagerTest() {
+    private FileBackedTasksManagerTest() {
     }
 
     @Override

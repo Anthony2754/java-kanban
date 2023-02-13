@@ -9,7 +9,7 @@ import java.net.http.HttpResponse;
 
 public class KVTaskClient {
     private final String apiToken;
-    URI uri;
+    public URI uri;
     HttpClient client = HttpClient.newHttpClient();
 
     public HttpResponse<String> getResponse() {
@@ -52,8 +52,8 @@ public class KVTaskClient {
                 .uri(url)
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        //System.out.println("KVTaskClient 53 line   " + response.body());
 
-        return response.body(); // response.body  у меня отличается
+
+        return response.body();
     }
 }

@@ -107,10 +107,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 startTimeEpic2, durationEpic2));
 
         manager.saveInTreeMapEpic(epic2);
-
-
-
-
     }
 
     @Test

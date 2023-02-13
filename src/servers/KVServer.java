@@ -14,7 +14,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
  */
 public class KVServer {
-	public static final int PORT = 8078;
+	public static final int PORT = 8081;
 	private final String apiToken;
 	private final HttpServer server;
 	private final Map<String, String> data = new HashMap<>();
@@ -28,12 +28,21 @@ public class KVServer {
 
 	}
 
+	public KVServer(int port) throws IOException {
+		apiToken = generateApiToken();
+		server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
+		server.createContext("/register", this::register);
+		server.createContext("/save", this::save);
+		server.createContext("/load", this::load);
+
+	}
+
 	private void load(HttpExchange httpExchange) throws IOException {
 
 		try {
 			System.out.println("\n/load");
 			if (!hasAuth(httpExchange)) {
-				System.out.println("Запрос неавторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
+				System.out.println("Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
 				httpExchange.sendResponseHeaders(403, 0);
 				return;
 			}
@@ -104,7 +113,7 @@ public class KVServer {
 
 	private void register(HttpExchange h) throws IOException {
 		try {
-			System.out.println("\n/register");
+			System.out.println(System.lineSeparator() + "/register");
 			if ("GET".equals(h.getRequestMethod())) {
 				sendText(h, apiToken);
 			} else {

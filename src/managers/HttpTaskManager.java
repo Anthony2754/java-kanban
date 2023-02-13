@@ -1,6 +1,6 @@
 package managers;
 
-import adapters.adapterForLocalDataTime;
+import adapters.AdapterForLocalDataTime;
 import com.google.gson.*;
 import servers.KVTaskClient;
 import tasks.Epic;
@@ -29,7 +29,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .serializeNulls()
-            .registerTypeAdapter(LocalDateTime.class, new adapterForLocalDataTime())
+            .registerTypeAdapter(LocalDateTime.class, new AdapterForLocalDataTime())
             .create();
 
     public Integer toJson(String key) throws IOException, InterruptedException {
@@ -67,7 +67,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
         String managerFromGson = null;
 
         try {
-            httpTaskManager = new HttpTaskManager(URI.create("http://localhost:8078/"));
+            httpTaskManager = new HttpTaskManager(URI.create("http://localhost:8081/"));///////////////////////////////////////
             managerFromGson = httpTaskManager.getKVTaskClient().load(key); // id задач выводится на 3 месте вместо 1
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -219,7 +219,6 @@ public class HttpTaskManager extends FileBackedTasksManager {
     @Override
     public ArrayList<Epic> getTreeMapEpic() {
         return super.getTreeMapEpic();
-
     }
 
     @Override
