@@ -52,7 +52,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         manager = createManager();
 
-
         task1 = manager.createTask(new Task("Прогуляться", "Прогуляться по парку", NEW,
                 LocalDateTime.of(2023, 2, 1, 21, 0), 30L));
         manager.saveInTreeMapTask(task1);

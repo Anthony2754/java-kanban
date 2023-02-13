@@ -14,7 +14,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
  */
 public class KVServer {
-	public static final int PORT = 8081;
+	public static final int PORT = 8083;
 	private final String apiToken;
 	private final HttpServer server;
 	private final Map<String, String> data = new HashMap<>();
@@ -48,6 +48,7 @@ public class KVServer {
 			}
 			if ("GET".equals(httpExchange.getRequestMethod())) {
 				String key = httpExchange.getRequestURI().getPath().substring("/load/".length());
+
 				if (key.isEmpty()) {
 					System.out.println("Key для сохранения пустой. key указывается в пути: /load/{key}");
 					httpExchange.sendResponseHeaders(400, 0);
@@ -78,36 +79,36 @@ public class KVServer {
 
 	}
 
-	private void save(HttpExchange h) throws IOException {
+	private void save(HttpExchange httpExchange) throws IOException {
 		try {
 			System.out.println("\n/save");
-			if (!hasAuth(h)) {
+			if (!hasAuth(httpExchange)) {
 				System.out.println("Запрос неавторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
-				h.sendResponseHeaders(403, 0);
+				httpExchange.sendResponseHeaders(403, 0);
 				return;
 			}
-			if ("POST".equals(h.getRequestMethod())) {
-				String key = h.getRequestURI().getPath().substring("/save/".length());
+			if ("POST".equals(httpExchange.getRequestMethod())) {
+				String key = httpExchange.getRequestURI().getPath().substring("/save/".length());
 				if (key.isEmpty()) {
 					System.out.println("Key для сохранения пустой. key указывается в пути: /save/{key}");
-					h.sendResponseHeaders(400, 0);
+					httpExchange.sendResponseHeaders(400, 0);
 					return;
 				}
-				String value = readText(h);
+				String value = readText(httpExchange);
 				if (value.isEmpty()) {
 					System.out.println("Value для сохранения пустой. value указывается в теле запроса");
-					h.sendResponseHeaders(400, 0);
+					httpExchange.sendResponseHeaders(400, 0);
 					return;
 				}
 				data.put(key, value);
 				System.out.println("Значение для ключа " + key + " успешно обновлено!");
-				h.sendResponseHeaders(200, 0);
+				httpExchange.sendResponseHeaders(200, 0);
 			} else {
-				System.out.println("/save ждёт POST-запрос, а получил: " + h.getRequestMethod());
-				h.sendResponseHeaders(405, 0);
+				System.out.println("/save ждёт POST-запрос, а получил: " + httpExchange.getRequestMethod());
+				httpExchange.sendResponseHeaders(405, 0);
 			}
 		} finally {
-			h.close();
+			httpExchange.close();
 		}
 	}
 
@@ -137,7 +138,7 @@ public class KVServer {
 	}
 
 	protected boolean hasAuth(HttpExchange h) {
-		String rawQuery = h.getRequestURI().getRawQuery();
+		String rawQuery = h.getRequestURI().toString();
 		return rawQuery != null && (rawQuery.contains("API_TOKEN=" + apiToken) || rawQuery.contains("API_TOKEN=DEBUG"));
 	}
 

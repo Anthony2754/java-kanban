@@ -67,8 +67,8 @@ public class HttpTaskManager extends FileBackedTasksManager {
         String managerFromGson = null;
 
         try {
-            httpTaskManager = new HttpTaskManager(URI.create("http://localhost:8081/"));///////////////////////////////////////
-            managerFromGson = httpTaskManager.getKVTaskClient().load(key); // id задач выводится на 3 месте вместо 1
+            httpTaskManager = new HttpTaskManager(URI.create("http://localhost:8078/"));///////////////////////////////////////
+            managerFromGson = httpTaskManager.getKVTaskClient().load(key);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -106,32 +106,16 @@ public class HttpTaskManager extends FileBackedTasksManager {
                         if (ids.contains(",")) {
                             String[] arrayOfIdsFromHistory = ids.split(",\\s*");
                             for (String id : arrayOfIdsFromHistory) {
-                                if (httpTaskManager.getTaskById(Integer.parseInt(id)) != null) {
-                                    httpTaskManager.getTaskById(Integer.parseInt(id));
-                                } else if (httpTaskManager.getEpicById(Integer.parseInt(id)) != null) {
-                                    httpTaskManager.getEpicById(Integer.parseInt(id));
-                                } else if (httpTaskManager.getSubtaskById(Integer.parseInt(id)) != null) {
-                                    httpTaskManager.getSubtaskById(Integer.parseInt(id));
-                                } else {
-                                    return null;
-                                }
+                                if (parseId(httpTaskManager, id)) return null;
                             }
                         } else {
-                            if (httpTaskManager.getTaskById(Integer.parseInt(ids)) != null) {
-                                httpTaskManager.getTaskById(Integer.parseInt(ids));
-                            } else if (httpTaskManager.getEpicById(Integer.parseInt(ids)) != null) {
-                                httpTaskManager.getEpicById(Integer.parseInt(ids));
-                            } else if (httpTaskManager.getSubtaskById(Integer.parseInt(ids)) != null) {
-                                httpTaskManager.getSubtaskById(Integer.parseInt(ids));
-                            } else {
-                                return null;
-                            }
+                            if (parseId(httpTaskManager, ids)) return null;
                         }
                     } else {
 
                         if (!gsonFormat.contains("}")) {
-                                 gsonFormat += "}";
-                               }
+                            gsonFormat += "}";
+                        }
 
                         Task task = gson.fromJson(gsonFormat, Task.class);
                         if (task.getDescription() != null && task.getName() != null) {
@@ -157,31 +141,15 @@ public class HttpTaskManager extends FileBackedTasksManager {
                     if (ids.contains(",")) {
                         String[] arrayIdFromHistory = ids.split(", ");
                         for (String id : arrayIdFromHistory) {
-                            if (httpTaskManager.getTaskById(Integer.parseInt(id)) != null) {
-                                httpTaskManager.getTaskById(Integer.parseInt(id));
-                            } else if (httpTaskManager.getEpicById(Integer.parseInt(id)) != null) {
-                                httpTaskManager.getEpicById(Integer.parseInt(id));
-                            } else if (httpTaskManager.getSubtaskById(Integer.parseInt(id)) != null) {
-                                httpTaskManager.getSubtaskById(Integer.parseInt(id));
-                            } else {
-                                return null;
-                            }
+                            if (parseId(httpTaskManager, id)) return null;
                         }
                     } else {
-                        if (httpTaskManager.getTaskById(Integer.parseInt(ids)) != null) {
-                            httpTaskManager.getTaskById(Integer.parseInt(ids));
-                        } else if (httpTaskManager.getEpicById(Integer.parseInt(ids)) != null) {
-                            httpTaskManager.getEpicById(Integer.parseInt(ids));
-                        } else if (httpTaskManager.getSubtaskById(Integer.parseInt(ids)) != null) {
-                            httpTaskManager.getSubtaskById(Integer.parseInt(ids));
-                        } else {
-                            return null;
-                        }
+                        if (parseId(httpTaskManager, ids)) return null;
                     }
                 } else {
 
-                        Task task = gson.fromJson(managerFromGson, Task.class);
-                        if (task.getDescription() != null && task.getName() != null) {
+                    Task task = gson.fromJson(managerFromGson, Task.class);
+                    if (task.getDescription() != null && task.getName() != null) {
                         httpTaskManager.createTask(task);
                         httpTaskManager.saveInTreeMapTask(task);
                     }
@@ -189,6 +157,19 @@ public class HttpTaskManager extends FileBackedTasksManager {
             }
         }
         return httpTaskManager;
+    }
+
+    private static boolean parseId(HttpTaskManager httpTaskManager, String id) {
+        if (httpTaskManager.getTaskById(Integer.parseInt(id)) != null) {
+            httpTaskManager.getTaskById(Integer.parseInt(id));
+        } else if (httpTaskManager.getEpicById(Integer.parseInt(id)) != null) {
+            httpTaskManager.getEpicById(Integer.parseInt(id));
+        } else if (httpTaskManager.getSubtaskById(Integer.parseInt(id)) != null) {
+            httpTaskManager.getSubtaskById(Integer.parseInt(id));
+        } else {
+            return true;
+        }
+        return false;
     }
 
     @Override
